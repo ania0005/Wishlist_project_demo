@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Wishlist_project_demo/static/css/main.b2c22d76.css",
-    "main.js": "/Wishlist_project_demo/static/js/main.429f94f4.js",
+    "main.js": "/Wishlist_project_demo/static/js/main.3a4ef3b2.js",
     "static/js/453.a086b594.chunk.js": "/Wishlist_project_demo/static/js/453.a086b594.chunk.js",
     "static/media/Photo01.jpg": "/Wishlist_project_demo/static/media/Photo01.03c5775aa4459008b114.jpg",
     "static/media/info.png": "/Wishlist_project_demo/static/media/info.8be093ff8bfa190b75b3.png",
@@ -11,11 +11,11 @@
     "static/media/gitHub.svg": "/Wishlist_project_demo/static/media/gitHub.c9c4448c11d4fcd9880d4d9e3ffd2e57.svg",
     "index.html": "/Wishlist_project_demo/index.html",
     "main.b2c22d76.css.map": "/Wishlist_project_demo/static/css/main.b2c22d76.css.map",
-    "main.429f94f4.js.map": "/Wishlist_project_demo/static/js/main.429f94f4.js.map",
+    "main.3a4ef3b2.js.map": "/Wishlist_project_demo/static/js/main.3a4ef3b2.js.map",
     "453.a086b594.chunk.js.map": "/Wishlist_project_demo/static/js/453.a086b594.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b2c22d76.css",
-    "static/js/main.429f94f4.js"
+    "static/js/main.3a4ef3b2.js"
   ]
 }
