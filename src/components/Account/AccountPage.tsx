@@ -7,6 +7,7 @@ import moment from "moment";
 import { Card, Button, Typography } from "antd";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
+import { getDemoUser, getWishlists, getGifts } from "../../demo/demoStorage";
 
 const { Meta } = Card;
 const { Text } = Typography;
@@ -18,73 +19,24 @@ const AccountPage = () => {
   const [wishlists, setWishlists] = useState<Wishlist[]>([]);
   const [giftCounts, setGiftCounts] = useState<{ [key: string]: number }>({});
 
-  const getGiftCount = async (wishlist: Wishlist): Promise<number> => {
-    let giftCount = 0;
-    try {
-      const response = await fetch(`api/wishlists/${wishlist.id}/gifts`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const gifts = await response.json();
-      giftCount = gifts.length;
-    } catch (error) {
-      console.error("Error:", error);
-    }
-    return giftCount;
-  };
+  
+useEffect(() => {
+  const demoUser = getDemoUser();
+  setUsername(demoUser.firstName);
 
-  useEffect(() => {
-    const fetchGiftCounts = async () => {
-      const giftCounts: { [key: string]: number } = {};
-      for (const wishlist of wishlists) {
-        const giftCount = await getGiftCount(wishlist);
-        giftCounts[wishlist.id] = giftCount;
-      }
-      setGiftCounts(giftCounts);
-    };
+  const demoWishlists = getWishlists();
+  setWishlists(demoWishlists as unknown as Wishlist[]);
+  const counts: { [key: string]: number } = {};
 
-    fetchGiftCounts();
-  }, [wishlists]);
+  demoWishlists.forEach((wishlist) => {
+    counts[wishlist.id] = getGifts(wishlist.id).length;
+  });
 
-  useEffect(() => {
-    fetch("/api/users/auth/me")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setUsername(data.firstName);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+  setGiftCounts(counts);
+}, []);
+ 
 
-    fetch("/api/wishlists")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then(async (data: Wishlist[]) => {
-        if (data) {
-          setWishlists(data);
-          const giftCounts: { [key: string]: number } = {};
-          for (const wishlist of data) {
-            const giftCount = await getGiftCount(wishlist);
-            giftCounts[wishlist.id] = giftCount;
-          }
-          setGiftCounts(giftCounts);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, []);
+  
 
   const handleDeleteClick = () => {
     setShowModal(true);

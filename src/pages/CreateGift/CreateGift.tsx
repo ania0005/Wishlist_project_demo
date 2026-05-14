@@ -1,6 +1,7 @@
 import React, { useState, useRef, ChangeEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./CreateGift.css";
+import { createGift } from "../../demo/demoStorage";
 
 const CreateGift: React.FC = () => {
   const navigate = useNavigate();
@@ -14,35 +15,23 @@ const CreateGift: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { id } = useParams();
 
-  const saveGift = async () => {
-    try {
-      const giftData = {
-        title: giftName,
-        description: giftComment,
-        price: parseFloat(giftPrice),
-        url: giftLink,
-        imgUrl: giftImgUrl,
-        currency: currency,
-        isReserved: true,
-      };
+  const saveGift = () => {
+  if (!id) return;
 
-      const response = await fetch(`/api/wishlists/${id}/gifts`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(giftData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to save gift, url of the image is too long, choose another image. ");
-      }
-
-      navigate(`/wishlist/${id}`);
-    } catch (error: any) {
-      setErrorMessage(error.message);
-    }
+  const giftData = {
+    title: giftName,
+    description: giftComment,
+    price: parseFloat(giftPrice),
+    url: giftLink,
+    imgUrl: giftImgUrl,
+    currency: currency,
+    reserved: false,
   };
+
+  createGift(id, giftData);
+
+  navigate(`/wishlist/${id}`);
+};
 
   const handleSaveClick = async () => {
     if (!giftName.trim()) {
@@ -71,7 +60,7 @@ const CreateGift: React.FC = () => {
       return;
     }
 
-    await saveGift();
+    saveGift();
   };
 
   const handleImgUpload = (event: React.ChangeEvent<HTMLInputElement>) => {

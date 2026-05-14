@@ -1,6 +1,7 @@
 {
   "name": "wishlist1",
   "version": "0.1.0",
+  "homepage": "https://ania0005.github.io/Wishlist_project_demo",
   "private": true,
   "proxy": "http://localhost:8080",
   "dependencies": {
@@ -33,6 +34,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -55,6 +58,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@types/uuid": "^9.0.8"
+    "@types/uuid": "^9.0.8",
+    "gh-pages": "^6.3.0"
   }
 }

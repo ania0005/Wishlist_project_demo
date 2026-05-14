@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CreateWishlist.css";
+import { createWishlist } from "../../demo/demoStorage";
 
 const CreateWishlist: React.FC = () => {
   const navigate = useNavigate();
@@ -9,29 +10,14 @@ const CreateWishlist: React.FC = () => {
   const [wishlistDate, setWishlistDate] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const saveWishlist = async () => {
-    try {
-      const response = await fetch("/api/wishlists", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: wishlistName,
-          description: wishlistComment,
-          eventDate: wishlistDate,
-        }),
-      });
+  const saveWishlist = () => {
+    createWishlist({
+      title: wishlistName,
+      description: wishlistComment || null,
+      eventDate: wishlistDate,
+    });
 
-      if (!response.ok) {
-        console.error("Failed to save wishlist");
-        throw new Error("Failed to save wishlist");
-      }
-
-      console.log("Wishlist saved successfully");
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    console.log("Wishlist saved successfully");
   };
 
   const handleSaveClick = async () => {
@@ -41,7 +27,7 @@ const CreateWishlist: React.FC = () => {
     }
     if (!wishlistDate.trim()) {
       setErrorMessage(
-        "Please enter a valid date within the range from today to the next 50 years."
+        "Please enter a valid date within the range from today to the next 50 years.",
       );
       return;
     }
@@ -53,12 +39,12 @@ const CreateWishlist: React.FC = () => {
 
     if (inputDateObject < currentDate || inputDateObject > maxDate) {
       setErrorMessage(
-        "Please enter a valid date within the range from today to the next 50 years."
+        "Please enter a valid date within the range from today to the next 50 years.",
       );
       return;
     }
 
-    await saveWishlist();
+    saveWishlist();
     navigate("/dashboard");
   };
 
@@ -92,7 +78,7 @@ const CreateWishlist: React.FC = () => {
   };
 
   const handleWishlistCommentChange = (
-    event: ChangeEvent<HTMLTextAreaElement>
+    event: ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setWishlistComment(event.target.value);
   };

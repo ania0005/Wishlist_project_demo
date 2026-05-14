@@ -13,6 +13,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGift } from "@fortawesome/free-solid-svg-icons";
 import "./WishListPage.css";
 import "../../App.css";
+import {
+  getWishlistById,
+  getGifts,
+  deleteWishlist,
+  deleteGift,
+  createShareUuid,
+} from "../../demo/demoStorage";
 
 const WishListPage: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -24,34 +31,19 @@ const WishListPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
-    if (!id) return;
+  if (!id) return;
 
-    const fetchWishlist = async () => {
-      try {
-        const response = await fetch(`/api/wishlists/${id}`);
-        if (!response.ok) throw new Error("Network response was not ok");
-        const data = await response.json();
-        setTitle(data.title);
-        setComment(data.description);
-      } catch (error) {
-        console.error("Error fetching wishlist:", error);
-      }
-    };
+  const wishlist = getWishlistById(id);
 
-    const fetchGifts = async () => {
-      try {
-        const response = await fetch(`/api/wishlists/${id}/gifts`);
-        if (!response.ok) throw new Error("Network response was not ok");
-        const data = await response.json();
-        setGifts(data);
-      } catch (error) {
-        console.error("Error fetching gifts:", error);
-      }
-    };
+  if (!wishlist) return;
 
-    fetchWishlist();
-    fetchGifts();
-  }, [id]);
+  setTitle(wishlist.title);
+  setComment(wishlist.description);
+
+ 
+
+  setGifts(getGifts(id));
+}, [id]);
 
   useEffect(() => {
     gifts.forEach((gift) => {
@@ -73,60 +65,39 @@ const WishListPage: React.FC = () => {
   const handleDeleteClick = () => setShowModal(true);
   const handleAddGiftClick = () => id && navigate(`/wishlist/${id}/createGift`);
   const handleCloseModal = () => setShowModal(false);
-  const handleDeleteWishList = async () => {
-    if (!id) return;
-    try {
-      const response = await fetch(`/api/wishlists/${id}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        document.cookie =
-          "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        localStorage.removeItem("accessToken");
-        sessionStorage.clear();
-        navigate("/dashboard");
-      } else {
-        console.error("Failed to delete WishList.");
-      }
-    } catch (error) {
-      console.error("Error deleting WishList:", error);
-    }
-  };
+  const handleDeleteWishList = () => {
+  if (!id) return;
+
+  deleteWishlist(id);
+  navigate("/dashboard");
+};
 
   const handleShareClick = () => setShowShareModal(true);
   const handleCopyLink = async () => {
-    if (!id) return;
-    try {
-      const response = await fetch(`/api/wishlists/${id}/share`, {
-        method: "POST",
-      });
-      const data = await response.json();
-      const link = `${window.location.origin}/mywishlist/${data.uuid}`;
-      await navigator.clipboard.writeText(link);
-      setShowShareModal(false);
-      message.success("Link copied", 2);
-    } catch (error) {
-      console.error("Failed to copy link:", error);
-    }
-  };
+  if (!id) return;
+
+  try {
+    const uuid = createShareUuid(id);
+    const link = `${window.location.origin}/#/mywishlist/${uuid}`;
+
+    await navigator.clipboard.writeText(link);
+
+    setShowShareModal(false);
+    message.success("Link copied", 2);
+  } catch (error) {
+    console.error("Failed to copy link:", error);
+  }
+};
 
   const handleEditGift = (gift: Gift) =>
     gift.id && navigate(`/gift/${gift.id}/editGift`);
 
-  const handleDeleteGift = async (gift: Gift) => {
-    try {
-      const response = await fetch(`/api/gifts/${gift.id}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        setGifts(gifts.filter((g) => g.id !== gift.id));
-      } else {
-        console.error("Failed to delete Gift.");
-      }
-    } catch (error) {
-      console.error("Error deleting Gift:", error);
-    }
-  };
+  const handleDeleteGift = (gift: Gift) => {
+  if (!gift.id) return;
+
+  deleteGift(gift.id);
+  setGifts(getGifts(id!));
+};
 
   const giftMenu = (gift: Gift) => [
     { key: "edit", label: "Edit", onClick: () => handleEditGift(gift) },

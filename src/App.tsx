@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import Footer from "./components/footer/Footer";
 import ScrollToTop from "./utils/ScrollToTop";
 import AuthForm from "./components/Auth/AuthForm";
@@ -15,6 +15,7 @@ import { PrivacyPolicy } from "./pages/PrivacyPolicy/PrivacyPolicy";
 import CreateWishlist from "./pages/CreateWishlist/CreateWishlist";
 import CreateGift from "./pages/CreateGift/CreateGift";
 import Home from "./pages/Home/Home";
+import { getDemoUser } from "./demo/demoStorage";
 import SharePage from "./components/SharePage/SharePage";
 import NoPageFound from "./components/NoPageFound/NoPageFound";
 
@@ -22,15 +23,9 @@ import NoPageFound from "./components/NoPageFound/NoPageFound";
 const App: React.FC = () => {
   const [user, setUser] = useState<User | undefined>(undefined);
   useEffect(() => {
-    fetch("/api/users/auth/me")
-      .then((data) => data.json())
-      .then((u) => {
-        setUser(u);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  const demoUser = getDemoUser();
+  setUser(demoUser);
+}, []);
   return (
     <div className="App">
       <AuthContext.Provider value={{ user, setUser }}>
@@ -48,8 +43,9 @@ const App: React.FC = () => {
             <Route path="/dashboard" element={<AccountPage />} />
             <Route path="/wishlist/:id" element={<WishListPage />} />
             <Route path="/signup" element={<SignUpPage />} />
-            <Route path="*" element={<NoPageFound />} />
             <Route path="/mywishlist/:uuid" element={<SharePage />} />
+            <Route path="*" element={<NoPageFound />} />
+            
           </Routes>
           <Footer />
         </Router>

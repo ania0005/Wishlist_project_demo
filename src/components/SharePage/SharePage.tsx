@@ -7,6 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGift } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import "./SharePage.css";
+import {
+  getWishlistByUuid,
+  updateGiftReservation,
+} from "../../demo/demoStorage";
 
 const SharePage: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -15,65 +19,38 @@ const SharePage: React.FC = () => {
   const [description, setDescription] = useState("");
   const { uuid } = useParams<{ uuid: string }>();
 
-  useEffect(() => {
-    const fetchShareData = async () => {
-      try {
-        const response = await fetch(`/api/wishlists/share/${uuid}`);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setTitle(data.title);
-        setDescription(data.description);
-        setEventDate(moment(data.eventDate));
-      } catch (error) {
-        console.error("Error fetching share data:", error);
-      }
-    };
-    fetchShareData();
-  }, [uuid]);
+  
 
   useEffect(() => {
-    const fetchGifts = async () => {
-      try {
-        const response = await fetch(`/api/wishlists/share/${uuid}`);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        if (data.gifts) {
-          setGifts(data.gifts);
-        }
-      } catch (error) {
-        console.error("Error fetching gifts:", error);
-      }
-    };
-    fetchGifts();
-  }, [uuid]);
+  if (!uuid) return;
 
-  const handleReserveClick = async (id: string) => {
-    try {
-      const updatedGifts = gifts.map((gift) =>
-        gift.id === id ? { ...gift, reserved: !gift.reserved } : gift
-      );
-      setGifts(updatedGifts);
-      localStorage.setItem(
-        `gift_${id}_reservation`,
-        updatedGifts.find((gift) => gift.id === id)?.reserved
-          ? "reserved"
-          : "unreserved"
-      );
+  const sharedWishlist = getWishlistByUuid(uuid);
 
-      await fetch(`/api/wishlists/share/${uuid}/reserve/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    } catch (error) {
-      console.error("Error updating reservation:", error);
-    }
-  };
+  if (!sharedWishlist) return;
+
+  setTitle(sharedWishlist.title);
+  setDescription(sharedWishlist.description);
+
+  if (sharedWishlist.eventDate) {
+    setEventDate(moment(sharedWishlist.eventDate));
+  }
+
+  setGifts(sharedWishlist.gifts);
+}, [uuid]);
+
+  const handleReserveClick = (id: string) => {
+  const updatedGifts = gifts.map((gift) =>
+    gift.id === id ? { ...gift, reserved: !gift.reserved } : gift
+  );
+
+  setGifts(updatedGifts);
+
+  const updatedGift = updatedGifts.find((gift) => gift.id === id);
+
+  if (updatedGift) {
+    updateGiftReservation(id, updatedGift.reserved);
+  }
+};
 
   const calculateDaysLeft = (): string => {
     if (!eventDate) return "";
