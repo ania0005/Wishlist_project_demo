@@ -1,4 +1,4 @@
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate  } from "react-router-dom";
 import Footer from "./components/footer/Footer";
 import ScrollToTop from "./utils/ScrollToTop";
 import AuthForm from "./components/Auth/AuthForm";
@@ -44,7 +44,7 @@ const App: React.FC = () => {
             <Route path="/wishlist/:id" element={<WishListPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/mywishlist/:uuid" element={<SharePage />} />
-            <Route path="*" element={<NoPageFound />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
             
           </Routes>
           <Footer />

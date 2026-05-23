@@ -3,30 +3,31 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   margin-top: 60px;
 }
 
 .title-custom {
-  font-size: 50px;
-  margin-top: 20px;
-  margin-left: 20px;
+  font-size: 40px;
+  margin-top: 16px;
+  margin-left: 16px;
 }
 
 .title-1-custom {
-  font-size: 20px;
+  font-size: 16px;
   font-family: "DM Serif Display", serif;
-  margin: 15px auto 10px;
+  margin: 12px auto 8px;
   width: 100%;
 }
 
 .wishlist-card-custom {
   background-color: #d1edf8;
   box-shadow: 0px 2px 4px rgba(53, 22, 22, 0.4);
-  padding: 30px;
-  border-radius: 15px;
-  width: 800px;
-  height: 800px;
+  padding: 24px;
+  border-radius: 12px;
+  width: 640px;
+  min-height: 640px;
+  box-sizing: border-box;
 }
 
 .back-arrow-custom a {
@@ -45,8 +46,8 @@
 
 .currency-select {
   float: left;
-  margin-left: 15px;
-  height: 40px; 
+  margin-left: 12px;
+  height: 32px;
 }
 
 .currency-input {
@@ -54,46 +55,47 @@
 }
 
 .image-input-custom {
-  width: 220px;
-  height: 180px;
-  margin-bottom: 65px;
-  line-height: 40px;
-  text-align: center; 
-  border-radius: 10px;
+  width: 176px;
+  height: 144px;
+  margin-bottom: 52px;
+  line-height: 32px;
+  text-align: center;
+  border-radius: 8px;
 }
 
 .link-input-custom {
-  padding-left: 10px;
+  padding-left: 8px;
 }
 
 .link-input-custom input {
   justify-content: center;
-  width: calc(100% - 30px);
-  gap: 100px;
-  border-radius: 10px;
+  width: calc(100% - 24px);
+  gap: 80px;
+  border-radius: 8px;
 }
 
 #gift-name-custom {
-  width: 380px; 
-  border-radius: 10px;
+  width: 304px;
+  border-radius: 8px;
 }
 
 #gift-link-custom {
-  margin-bottom: 35px;
+  margin-bottom: 28px;
 }
 
 .rounded-input-custom {
   background-color: white;
   border: none;
-  border-radius: 10px;
-  height: 50px;
+  border-radius: 8px;
+  height: 40px;
   font-family: "DM Serif Display", serif;
+  box-sizing: border-box;
 }
 
 .input-group-1 {
   display: flex;
-  gap: 60px;
-  margin-left: 10px;
+  gap: 48px;
+  margin-left: 8px;
 }
 
 .rounded-input-custom,
@@ -103,12 +105,13 @@
 
 .rounded-textarea-custom {
   background-color: white;
-  border-radius: 10px;
+  border-radius: 8px;
   width: 100%;
-  height: 100px;
-  padding: 10px;
+  height: 80px;
+  padding: 8px;
   border-color: #dad7d7;
   font-family: "DM Serif Display", serif;
+  box-sizing: border-box;
 }
 
 .rounded-input::placeholder,
@@ -117,23 +120,23 @@
 .rounded-textarea-custom::placeholder,
 .file-input-text {
   color: #c2bfbf;
-  border-radius: 10px;
-  padding-left: 10px;
-  font-size: 18px;
+  border-radius: 8px;
+  padding-left: 8px;
+  font-size: 14px;
 }
 
 .save-button-custom {
-  margin-top: 30px;
-  margin-right: 50px;
+  margin-top: 24px;
+  margin-right: 40px;
   background-color: #007bff;
   color: #ffffff;
-  font-size: 25px;
+  font-size: 20px;
   border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
+  border-radius: 8px;
+  padding: 8px 16px;
   cursor: pointer;
-  width: 200px;
-  height: 50px;
+  width: 160px;
+  height: 40px;
   float: right;
 }
 
@@ -142,18 +145,126 @@
 }
 
 .right-column {
-  margin-top: 20px;
+  margin-top: 16px;
 }
 
 .required-field-note {
-  margin-top: 15px;
-  font-size: 16px;
+  margin-top: 12px;
+  font-size: 14px;
   font-family: "DM Serif Display", serif;
   color: #555;
 }
 
 .required-icon {
   color: #777474;
-  font-size: 16px;
+  font-size: 14px;
   vertical-align: middle;
+}
+
+.file-input-text {
+  width: 176px;
+  height: 144px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  padding: 8px;
+  background-color: white;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.file-input-text img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.demo-image-panel {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.demo-image-panel img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+
+
+.file-input-text img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.image-modal {
+  background-color: #d1edf8;
+  padding: 24px;
+  border-radius: 16px;
+  width: 420px;
+  min-height: 260px;
+  box-shadow: 0px 4px 12px rgba(53, 22, 22, 0.4);
+  position: relative;
+  text-align: center;
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  border: none;
+  background: transparent;
+  font-size: 28px;
+  cursor: pointer;
+  color: #777474;
+}
+
+.modal-title {
+  font-family: "DM Serif Display", serif;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.modal-image-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.modal-image-grid img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  background-color: white;
+}
+
+.modal-image-grid img:hover {
+  border-color: #007bff;
+  transform: scale(1.05);
+}
+
+.file-input-text img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

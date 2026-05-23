@@ -47,8 +47,8 @@ export const getWishlists = (): DemoWishlist[] => {
     {
       id: "1",
       title: "Birthday Wishlist",
-      description: "Gift ideas for my birthday",
-      comment: "Gift ideas for my birthday",
+      description: "My birthday",
+      comment: "My birthday",
       eventDate: "2026-12-20",
       user_id: 1,
     },
@@ -264,6 +264,44 @@ export const updateGiftReservation = (
     updatedGifts[wishlistId] = gifts[wishlistId].map((gift) =>
       gift.id === giftId
         ? { ...gift, reserved }
+        : gift
+    );
+  });
+
+  saveAllGifts(updatedGifts);
+};
+export const getGiftById = (giftId: string) => {
+  const gifts = getAllGifts();
+
+  for (const wishlistId of Object.keys(gifts)) {
+    const gift = gifts[wishlistId].find((gift) => gift.id === giftId);
+
+    if (gift) {
+      return {
+        gift,
+        wishlistId,
+      };
+    }
+  }
+
+  return null;
+};
+
+export const updateGift = (
+  giftId: string,
+  updatedGiftData: Omit<Gift, "id" | "wishlist">
+) => {
+  const gifts = getAllGifts();
+
+  const updatedGifts: Record<string, Gift[]> = {};
+
+  Object.keys(gifts).forEach((wishlistId) => {
+    updatedGifts[wishlistId] = gifts[wishlistId].map((gift) =>
+      gift.id === giftId
+        ? {
+            ...gift,
+            ...updatedGiftData,
+          }
         : gift
     );
   });

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getGiftById, updateGift as updateDemoGift } from "../../demo/demoStorage";
 
 const EditGift: React.FC = () => {
   const navigate = useNavigate();
@@ -16,59 +17,42 @@ const EditGift: React.FC = () => {
   const { id: giftId } = useParams<{ id: string }>();
 
   useEffect(() => {
-    if (!giftId) return;
+  if (!giftId) return;
 
-    fetch(`/api/gifts/${giftId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setGiftImgUrl(data.imgUrl);
-        setGiftName(data.title);
-        setGiftLink(data.url);
-        setGiftPrice(data.price.toString());
-        setGiftComment(data.description);
-        setCurrency(data.currency);
-        setGiftIsReserved(data.reserved);
-        setWishlistId(data.wishlist.id);
-      })
-      .catch((error) => {
-        console.error("Error fetching gift data:", error);
-      });
-  }, [giftId]);
+  const result = getGiftById(giftId);
 
-  const updateGift = async () => {
-    if (!giftId) return;
+  if (!result) {
+    setErrorMessage("Gift not found");
+    return;
+  }
 
-    try {
-      const giftData = {
-        title: giftName,
-        url: giftLink,
-        price: parseFloat(giftPrice),
-        description: giftComment,
-        reserved: giftIsReserved,
-        imgUrl: giftImgUrl,
-        currency: currency,
-      };
+  const { gift, wishlistId } = result;
 
-      const response = await fetch(`/api/gifts/${giftId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(giftData),
-      });
+  setGiftImgUrl(gift.imgUrl || "");
+  setGiftName(gift.title || "");
+  setGiftLink(gift.url || "");
+  setGiftPrice(gift.price.toString());
+  setGiftComment(gift.description || "");
+  setCurrency(gift.currency || "EUR");
+  setGiftIsReserved(gift.reserved);
+  setWishlistId(wishlistId);
+}, [giftId]);
 
-      if (response.ok) {
-        console.log("Gift updated successfully.");
-        navigate(`/wishlist/${wishlistId}`);
-      } else {
-        setErrorMessage("Failed to update gift. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error updating gift:", error);
-      setErrorMessage("An error occurred while updating the gift. Please try again.");
-    }
-  };
+  const updateGift = () => {
+  if (!giftId) return;
 
+  updateDemoGift(giftId, {
+    title: giftName,
+    url: giftLink,
+    price: parseFloat(giftPrice),
+    description: giftComment,
+    reserved: giftIsReserved,
+    imgUrl: giftImgUrl,
+    currency: currency,
+  });
+
+  navigate(`/wishlist/${wishlistId}`);
+};
   const handleSaveClick = async () => {
     setErrorMessage(""); // Clear previous error messages
 
@@ -97,7 +81,7 @@ const EditGift: React.FC = () => {
       return;
     }
 
-    await updateGift();
+    updateGift();
   };
 
   const handleImgUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,7 +112,7 @@ const EditGift: React.FC = () => {
     <div className="wishlist-container-custom">
       <div className="wishlist-card-custom">
         <span className="back-arrow-custom">
-          <a href={`/wishlist/${wishlistId}`}>&#8592; Back</a>
+          <a href={`/#/wishlist/${wishlistId}`}>&#8592; Back</a>
         </span>
         <h2 className="title-custom">Edit Gift</h2>
         <div className="link-input-custom">

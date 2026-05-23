@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   font-size: 14px;
   font-family: "DM Serif Display", serif;
   margin-top: 60px;
@@ -12,10 +12,10 @@
 .wishlist-card {
   background-color: #d1edf8;
   box-shadow: 0px 2px 4px rgba(53, 22, 22, 0.4);
-  padding: 20px;
-  border-radius: 15px;
-  width: 800px;
-  height: 800px;
+  padding: 16px;
+  border-radius: 12px;
+  width: 640px;
+  min-height: 640px;
 }
 
 .back-arrow a {
@@ -29,9 +29,9 @@
 
 .input-group {
   width: 100%;
-  border-radius: 20px;
-  margin-left: 20px;
-  padding: 7px;
+  border-radius: 16px;
+  margin-left: 16px;
+  padding: 5px;
 }
 
 .rounded-textarea::placeholder,
@@ -42,13 +42,13 @@ input.rounded-input-custom::placeholder {
 
 label {
   display: block;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   position: relative;
 }
 
 .required-icon {
   color: #777474;
-  font-size: 16px;
+  font-size: 14px;
   position: absolute;
   top: 0;
   margin-left: 1px;
@@ -57,21 +57,21 @@ label {
 .rounded-input {
   background-color: white;
   border: none;
-  border-radius: 15px;
+  border-radius: 12px;
   font-family: "DM Serif Display", serif;
-  font-size: 18px;
-  margin-top: 10px;
+  font-size: 16px;
+  margin-top: 8px;
 }
 
 .rounded-textarea {
   background-color: white;
   border-radius: 5px;
-  width: 94%;
-  height: 150px;
-  padding: 20px;
+  width: 90%;
+  height: 120px;
+  padding: 16px;
   font-family: "DM Serif Display", serif;
-  font-size: 18px;
-  margin-top: 10px;
+  font-size: 16px;
+  margin-top: 8px;
 }
 
 .save-button:hover {
@@ -79,20 +79,20 @@ label {
 }
 
 .file-input-text {
-  width: 200px;
-  height: 200px;
+  width: 160px;
+  height: 160px;
   justify-content: center;
   align-items: center;
   display: flex;
-  padding: 10px;
+  padding: 8px;
   border-radius: 5px;
   background-color: white;
   cursor: pointer;
 }
 
 .required-field-note {
-  font-size: 16px;
+  font-size: 14px;
   color: #777474;
-  margin-left: 20px;
-  margin-bottom: 10px;
+  margin-left: 16px;
+  margin-bottom: 8px;
 }

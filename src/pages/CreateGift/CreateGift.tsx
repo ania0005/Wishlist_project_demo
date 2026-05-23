@@ -1,10 +1,13 @@
-import React, { useState, useRef, ChangeEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./CreateGift.css";
 import { createGift } from "../../demo/demoStorage";
+import { demoGifts } from "../../demo/demoData";
 
 const CreateGift: React.FC = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+
   const [giftImgUrl, setGiftImgUrl] = useState<string>("");
   const [giftName, setGiftName] = useState<string>("");
   const [giftLink, setGiftLink] = useState<string>("");
@@ -12,38 +15,43 @@ const CreateGift: React.FC = () => {
   const [giftComment, setGiftComment] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [currency, setCurrency] = useState<string>("EUR");
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { id } = useParams();
+  const [showDemoImages, setShowDemoImages] = useState<boolean>(false);
 
   const saveGift = () => {
-  if (!id) return;
+    if (!id) return;
 
-  const giftData = {
-    title: giftName,
-    description: giftComment,
-    price: parseFloat(giftPrice),
-    url: giftLink,
-    imgUrl: giftImgUrl,
-    currency: currency,
-    reserved: false,
+    const giftData = {
+      title: giftName,
+      description: giftComment,
+      price: parseFloat(giftPrice),
+      url: giftLink,
+      imgUrl: giftImgUrl,
+      currency: currency,
+      reserved: false,
+    };
+
+    createGift(id, giftData);
+    navigate(`/wishlist/${id}`);
   };
-
-  createGift(id, giftData);
-
-  navigate(`/wishlist/${id}`);
-};
 
   const handleSaveClick = async () => {
     if (!giftName.trim()) {
-      setErrorMessage(
-        "Please enter a gift name."
-      );
+      setErrorMessage("Please enter a gift name.");
       return;
     }
+
+    if (giftName.length > 125) {
+      setErrorMessage("Name too long. Please shorten name.");
+      return;
+    }
+
     if (!giftLink.trim()) {
-      setErrorMessage(
-        "Please enter a link where you can buy the gift."
-      );
+      setErrorMessage("Please enter a link where you can buy the gift.");
+      return;
+    }
+
+    if (giftLink.length > 500) {
+      setErrorMessage("Gift link is too long. Maximum 500 characters allowed.");
       return;
     }
 
@@ -51,35 +59,13 @@ const CreateGift: React.FC = () => {
       setErrorMessage("Please enter a price for the gift.");
       return;
     }
+
     if (giftComment.length > 60) {
       setErrorMessage("Comment too long. Please shorten your comment.");
       return;
     }
-    if (giftName.length > 125) {
-      setErrorMessage("Name too long. Please shorten name.");
-      return;
-    }
 
     saveGift();
-  };
-
-  const handleImgUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target && event.target.result) {
-          setGiftImgUrl(event.target.result as string);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleChooseFile = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
   };
 
   const handleImgLinkChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -98,7 +84,6 @@ const CreateGift: React.FC = () => {
   };
 
   const handleCurrencyChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    console.log("Selected currency:", event.target.value); // Log the selected value
     setCurrency(event.target.value);
     setErrorMessage("");
   };
@@ -119,7 +104,9 @@ const CreateGift: React.FC = () => {
         <span className="back-arrow-custom">
           <a href={`/wishlist/${id}`}>&#8592; Back</a>
         </span>
+
         <h2 className="title-custom">Add a gift</h2>
+
         <div className="link-input-custom">
           <label className="title-1-custom" htmlFor="gift-link-custom">
             Link where you can buy a gift{" "}
@@ -128,30 +115,27 @@ const CreateGift: React.FC = () => {
           <input
             type="text"
             id="gift-link-custom"
-            placeholder="For example"
+            placeholder="Paste product link, max. 500 characters"
             className="rounded-input-custom"
             value={giftLink}
             onChange={handleGiftLinkChange}
+            maxLength={500}
           />
         </div>
+
         <div className="input-group-1">
           <div className="right-column">
-            <div className="img-input-custom" onClick={handleChooseFile}>
-              <div className="file-input-text">
+            <div className="img-input-custom">
+              <div
+                className="file-input-text"
+                onClick={() => setShowDemoImages(true)}
+              >
                 {giftImgUrl ? (
-                  <img src={giftImgUrl} alt="Uploaded" />
+                  <img src={giftImgUrl} alt="Selected gift" />
                 ) : (
-                  "Img / Click to upload"
+                  "Click to choose image"
                 )}
               </div>
-              <input
-                type="file"
-                id="gift-img-custom"
-                className="file-input-custom"
-                onChange={handleImgUpload}
-                ref={fileInputRef}
-                style={{ display: "none" }}
-              />
             </div>
 
             <div className="input-group-custom">
@@ -161,7 +145,7 @@ const CreateGift: React.FC = () => {
               <input
                 type="text"
                 id="link-custom"
-                placeholder="Enter link"
+                placeholder="Or paste image link"
                 className="rounded-input-custom"
                 value={giftImgUrl}
                 onChange={handleImgLinkChange}
@@ -181,6 +165,7 @@ const CreateGift: React.FC = () => {
                 className="rounded-input-custom"
                 value={giftName}
                 onChange={handleGiftNameChange}
+                maxLength={125}
               />
             </div>
 
@@ -217,11 +202,14 @@ const CreateGift: React.FC = () => {
                 className="rounded-textarea-custom"
                 value={giftComment}
                 onChange={handleGiftCommentChange}
+                maxLength={60}
               ></textarea>
             </div>
           </div>
         </div>
+
         {errorMessage && <p className="error-message">{errorMessage}</p>}
+
         <div className="input-group-custom">
           <button className="save-button-custom" onClick={handleSaveClick}>
             Save
@@ -229,6 +217,35 @@ const CreateGift: React.FC = () => {
           <p className="required-field-note">* - Field Required</p>
         </div>
       </div>
+
+      {showDemoImages && (
+        <div className="modal-overlay">
+          <div className="image-modal">
+            <button
+              className="modal-close-button"
+              onClick={() => setShowDemoImages(false)}
+            >
+              ×
+            </button>
+
+            <h3 className="modal-title">Choose gift image</h3>
+
+            <div className="modal-image-grid">
+              {demoGifts.map((gift, index) => (
+                <img
+                  key={index}
+                  src={gift.imgUrl}
+                  alt={gift.title}
+                  onClick={() => {
+                    setGiftImgUrl(gift.imgUrl);
+                    setShowDemoImages(false);
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
