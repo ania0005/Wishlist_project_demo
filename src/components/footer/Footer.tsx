@@ -1,5 +1,5 @@
-import "./Style.css";
 import gitHub from "./../../img/gitHub.svg";
+import "./Style.css";
 
 const Footer = () => {
   return (
